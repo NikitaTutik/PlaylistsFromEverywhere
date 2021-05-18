@@ -6,11 +6,11 @@
         {% csrf_token %}
         <div class="form-group">
             {{ form|crispy }}
-            <button class="btn btn-outline-info" type="submit"> Sign Up</button>
+            <button class="btn btn-outline-info" type="submit"> Login</button>
         </div>
     </form>
     <div>
-        <a href="#">Sign In</a>
+        <a href="{% url 'register' %}">Sign In</a>
     </div>
     </div>
 {% endblock content %}

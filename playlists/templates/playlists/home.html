@@ -1,0 +1,10 @@
+{% extends "playlists/base.html" %}
+{% block content %}
+ <h1>Home</h1>
+    {% for playlist in playlists %}
+        <h3>{{ playlist.title }}</h3><p></p>
+        {{ playlist.content }}<p></p>
+        {{ playlist.author }} <p></p>
+        {{ playlist.date_added }}
+    {% endfor %}
+{% endblock content %}

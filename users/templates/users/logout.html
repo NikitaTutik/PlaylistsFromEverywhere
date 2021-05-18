@@ -1,0 +1,8 @@
+{% extends "playlists/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <h2>You have been logged out</h2>
+    <small class="muted">
+        <a href="{% url 'login' %}">Log In Again</a>
+    </small>
+{% endblock content %}
