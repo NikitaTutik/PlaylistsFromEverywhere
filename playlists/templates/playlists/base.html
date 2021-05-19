@@ -48,6 +48,12 @@
             </div>
         {% endfor %}
     {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        Enter the id of your playlist:
+        <input type="text" name="search">
+        <button type="submit">Search</button>
+    </form>
     {% block content %}
     {% endblock content %}
 </div>
