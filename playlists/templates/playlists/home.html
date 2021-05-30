@@ -1,8 +1,23 @@
 {% extends "playlists/base.html" %}
 {% block content %}
+     <form method="POST">
+        {% csrf_token %}
+        Enter ID of your playlist:
+        <div class="text-muted">Only YouTube supported right now</div>
+
+        <div class="input-group input-group-sm mb-3">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Only ID</span>
+          <input type="text" name="search" class="form-control"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        </div>
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
  <h1>Home</h1>
     {% for video in playlist %}
         <img width="150" height="120" src="{{ video.thumbnail }}">
         {{ video.title }}<br>
     {% endfor %}
+    {% if playlist %}
+        <p></p>
+    <button type="submit" class="btn btn-primary" name="add">Add to my playlists</button>
+    {% endif %}
 {% endblock content %}

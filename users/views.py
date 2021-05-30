@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from playlists.models import Playlist
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
@@ -38,3 +38,12 @@ def profile(request):
         'p_form': p_form
     }
     return render(request, 'users/profile.html',context)
+
+
+def profile_playlists(request):
+    obj = Playlist.objects.filter(author_id=request.user.id).values('playlist_name').distinct()
+
+    context = {
+        'obj': obj
+    }
+    return render(request, 'users/profile_playlists.html', context)
