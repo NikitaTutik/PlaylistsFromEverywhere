@@ -3,13 +3,14 @@ from django.shortcuts import render
 from .models import Playlist
 import requests
 from django.conf import settings
-from django.contrib.auth.models import User
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
 
 def home(request):
-    playlist_content = []
+    if len(request.POST.get('search', 'None')) == 34:
+        playlist_content = []
 
-    if request.method == 'POST':
         playlist_url = 'https://www.googleapis.com/youtube/v3/playlists'
         URL = 'https://www.googleapis.com/youtube/v3/playlistItems'
 
@@ -54,8 +55,36 @@ def home(request):
                                     author_id=request.user.id,
                                     date_added=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    context = {'playlist': playlist_content}
-    return render(request, 'playlists/home.html', context)
+        context = {'playlist': playlist_content}
+        return render(request, 'playlists/home.html', context)
+    elif len(request.POST.get('search', 'None')) == 22:
+        playlist_content = []
+        spotify = spotipy.Spotify(client_credentials_manager=
+                                  SpotifyClientCredentials(settings.SPOTIFY_CLIENT_ID, settings.SPOTIFY_CLIENT_SECRET))
+        playlist_id = request.POST['search']
+        results = spotify.playlist_items(playlist_id)
+        playlist_info = spotify.playlist(playlist_id)
+        items = results['items']
+
+        for item in items:
+            video_data = {
+                'title': item['track']['album']['artists'][0]['name']
+                         + " - " + item['track']['name'],
+                'thumbnail': item['track']['album']['images'][2]['url'],
+            }
+            playlist_content.append(video_data)
+            Playlist.objects.create(playlist_name=playlist_info['name'],
+                                    title=item['track']['album']['artists'][0]['name']
+                                          + " - " + item['track']['name'],
+                                    thumbnail=item['track']['album']['images'][2]['url'],
+                                    author_id=request.user.id,
+                                    date_added=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+        context = {'playlist': playlist_content}
+        return render(request, 'playlists/home.html', context)
+    else:
+        return render(request, 'playlists/home.html')
+
 
 def about(request):
     return render(request, 'playlists/about.html')
